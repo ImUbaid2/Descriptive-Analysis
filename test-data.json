@@ -1,0 +1,871 @@
+{
+  "_comment": "Test data for the In Charge Amplify schema. IDs are deterministic; relationships are consistent. Group names follow team-<8charId>-member / team-<8charId>-admin. weekNumber assumed ISO week (yyyy-Www). Covers: pending approval, inactive member, soft-deleted summary, edit history, expended invite, team isolation.",
+  "TeamGroup": [
+    {
+      "id": "tg-001",
+      "createdAt": "2026-01-10T09:00:00.000Z",
+      "updatedAt": "2026-01-10T09:00:00.000Z",
+      "name": "Pilot Cohort 2026",
+      "description": "Early-access teams trialling new features",
+      "featureToggles": {
+        "seenBy": true
+      }
+    }
+  ],
+  "Team": [
+    {
+      "id": "team-001",
+      "createdAt": "2026-02-02T09:00:00.000Z",
+      "updatedAt": "2026-02-02T09:00:00.000Z",
+      "code": "KESTREL4",
+      "subscriptionHolder": "0f1e2d3c-1111-4aaa-8bbb-000000000001",
+      "teamGroupId": "tg-001",
+      "featureToggles": {
+        "seenBy": false
+      },
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000001"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "team-002",
+      "createdAt": "2026-03-15T09:00:00.000Z",
+      "updatedAt": "2026-03-15T09:00:00.000Z",
+      "code": "OSPREY99",
+      "subscriptionHolder": "0f1e2d3c-2222-4aaa-8bbb-000000000006",
+      "teamGroupId": null,
+      "featureToggles": null,
+      "owners": [
+        "0f1e2d3c-2222-4aaa-8bbb-000000000006"
+      ],
+      "memberGroups": [
+        "team-e5f6g7h8-member"
+      ],
+      "adminGroups": [
+        "team-e5f6g7h8-admin"
+      ]
+    }
+  ],
+  "Member": [
+    {
+      "id": "mem-001",
+      "createdAt": "2026-02-02T09:00:00.000Z",
+      "updatedAt": "2026-02-02T09:00:00.000Z",
+      "firstname": "Sarah",
+      "surname": "Hughes",
+      "fullName": "Sarah Hughes",
+      "email": "sarah.hughes@example.com",
+      "role": "personal-assistant",
+      "teamId": "team-001",
+      "userId": "0f1e2d3c-1111-4aaa-8bbb-000000000001",
+      "isSupportedPerson": false,
+      "isAdmin": true,
+      "inactive": false,
+      "deleted": false,
+      "approvalStatus": "approved",
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000001"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "mem-002",
+      "createdAt": "2026-02-02T09:00:00.000Z",
+      "updatedAt": "2026-02-02T09:00:00.000Z",
+      "firstname": "Margaret",
+      "surname": "Hughes",
+      "fullName": "Margaret Hughes",
+      "email": "margaret.hughes@example.com",
+      "role": "central-person",
+      "teamId": "team-001",
+      "userId": "0f1e2d3c-1111-4aaa-8bbb-000000000002",
+      "isSupportedPerson": true,
+      "isAdmin": false,
+      "inactive": false,
+      "deleted": false,
+      "approvalStatus": "approved",
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000002"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "mem-003",
+      "createdAt": "2026-02-05T09:00:00.000Z",
+      "updatedAt": "2026-02-05T09:00:00.000Z",
+      "firstname": "James",
+      "surname": "Hughes",
+      "fullName": "James Hughes",
+      "email": "james.hughes@example.com",
+      "role": "family-or-friend",
+      "teamId": "team-001",
+      "userId": "0f1e2d3c-1111-4aaa-8bbb-000000000003",
+      "isSupportedPerson": false,
+      "isAdmin": false,
+      "inactive": false,
+      "deleted": false,
+      "approvalStatus": "approved",
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000003"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "mem-004",
+      "createdAt": "2026-02-09T09:00:00.000Z",
+      "updatedAt": "2026-02-09T09:00:00.000Z",
+      "firstname": "Priya",
+      "surname": "Sharma",
+      "fullName": "Priya Sharma",
+      "email": "priya.sharma@example.com",
+      "role": "worker",
+      "teamId": "team-001",
+      "userId": "0f1e2d3c-1111-4aaa-8bbb-000000000004",
+      "isSupportedPerson": false,
+      "isAdmin": false,
+      "inactive": false,
+      "deleted": false,
+      "approvalStatus": "approved",
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000004"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "mem-005",
+      "createdAt": "2026-02-09T09:00:00.000Z",
+      "updatedAt": "2026-02-09T09:00:00.000Z",
+      "firstname": "Tom",
+      "surname": "Okafor",
+      "fullName": "Tom Okafor",
+      "email": "tom.okafor@example.com",
+      "role": "worker",
+      "teamId": "team-001",
+      "userId": "0f1e2d3c-1111-4aaa-8bbb-000000000005",
+      "isSupportedPerson": false,
+      "isAdmin": false,
+      "inactive": true,
+      "deleted": false,
+      "approvalStatus": "approved",
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000005"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "mem-006",
+      "createdAt": "2026-04-20T09:00:00.000Z",
+      "updatedAt": "2026-04-20T09:00:00.000Z",
+      "firstname": "Lena",
+      "surname": "Kowalski",
+      "fullName": "Lena Kowalski",
+      "email": "lena.kowalski@example.com",
+      "role": "worker",
+      "teamId": "team-001",
+      "userId": null,
+      "isSupportedPerson": false,
+      "isAdmin": false,
+      "inactive": false,
+      "deleted": false,
+      "approvalStatus": "pending",
+      "owners": [],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "mem-007",
+      "createdAt": "2026-03-15T09:00:00.000Z",
+      "updatedAt": "2026-03-15T09:00:00.000Z",
+      "firstname": "Helen",
+      "surname": "Brady",
+      "fullName": "Helen Brady",
+      "email": "helen.brady@example.com",
+      "role": "personal-assistant",
+      "teamId": "team-002",
+      "userId": "0f1e2d3c-2222-4aaa-8bbb-000000000006",
+      "isSupportedPerson": false,
+      "isAdmin": true,
+      "inactive": false,
+      "deleted": false,
+      "approvalStatus": "approved",
+      "owners": [
+        "0f1e2d3c-2222-4aaa-8bbb-000000000006"
+      ],
+      "memberGroups": [
+        "team-e5f6g7h8-member"
+      ],
+      "adminGroups": [
+        "team-e5f6g7h8-admin"
+      ]
+    },
+    {
+      "id": "mem-008",
+      "createdAt": "2026-03-15T09:00:00.000Z",
+      "updatedAt": "2026-03-15T09:00:00.000Z",
+      "firstname": "David",
+      "surname": "Brady",
+      "fullName": "David Brady",
+      "email": "david.brady@example.com",
+      "role": "central-person",
+      "teamId": "team-002",
+      "userId": "0f1e2d3c-2222-4aaa-8bbb-000000000007",
+      "isSupportedPerson": true,
+      "isAdmin": false,
+      "inactive": false,
+      "deleted": false,
+      "approvalStatus": "approved",
+      "owners": [
+        "0f1e2d3c-2222-4aaa-8bbb-000000000007"
+      ],
+      "memberGroups": [
+        "team-e5f6g7h8-member"
+      ],
+      "adminGroups": [
+        "team-e5f6g7h8-admin"
+      ]
+    },
+    {
+      "id": "mem-009",
+      "createdAt": "2026-03-18T09:00:00.000Z",
+      "updatedAt": "2026-03-18T09:00:00.000Z",
+      "firstname": "Amara",
+      "surname": "Diallo",
+      "fullName": "Amara Diallo",
+      "email": "amara.diallo@example.com",
+      "role": "worker",
+      "teamId": "team-002",
+      "userId": "0f1e2d3c-2222-4aaa-8bbb-000000000008",
+      "isSupportedPerson": false,
+      "isAdmin": false,
+      "inactive": false,
+      "deleted": false,
+      "approvalStatus": "approved",
+      "owners": [
+        "0f1e2d3c-2222-4aaa-8bbb-000000000008"
+      ],
+      "memberGroups": [
+        "team-e5f6g7h8-member"
+      ],
+      "adminGroups": [
+        "team-e5f6g7h8-admin"
+      ]
+    }
+  ],
+  "Invite": [
+    {
+      "id": "inv-001",
+      "createdAt": "2026-02-04T09:00:00.000Z",
+      "updatedAt": "2026-02-04T09:00:00.000Z",
+      "code": "JX72KQ",
+      "teamId": "team-001",
+      "expended": true,
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000001"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "inv-002",
+      "createdAt": "2026-04-19T09:00:00.000Z",
+      "updatedAt": "2026-04-19T09:00:00.000Z",
+      "code": "PM38VT",
+      "teamId": "team-001",
+      "expended": false,
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000001"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "inv-003",
+      "createdAt": "2026-03-16T09:00:00.000Z",
+      "updatedAt": "2026-03-16T09:00:00.000Z",
+      "code": "WB91DH",
+      "teamId": "team-002",
+      "expended": false,
+      "owners": [
+        "0f1e2d3c-2222-4aaa-8bbb-000000000006"
+      ],
+      "memberGroups": [
+        "team-e5f6g7h8-member"
+      ],
+      "adminGroups": [
+        "team-e5f6g7h8-admin"
+      ]
+    }
+  ],
+  "Profile": [
+    {
+      "id": "prof-001",
+      "createdAt": "2026-02-03T09:00:00.000Z",
+      "updatedAt": "2026-02-03T09:00:00.000Z",
+      "bio": "Margaret is 78, lives at home in Leeds and loves gardening, crosswords and Radio 4. She has early-stage dementia and limited mobility on her left side.",
+      "createdBy": "0f1e2d3c-1111-4aaa-8bbb-000000000001",
+      "lastUpdatedBy": "0f1e2d3c-1111-4aaa-8bbb-000000000004",
+      "profileImage": {
+        "key": "profiles/margaret.jpg",
+        "bucket": "incharge-media",
+        "region": "eu-west-2"
+      },
+      "memberId": "mem-002",
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000001"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "prof-002",
+      "createdAt": "2026-03-16T09:00:00.000Z",
+      "updatedAt": "2026-03-16T09:00:00.000Z",
+      "bio": "David is 64, recovering from a stroke. Keen follower of county cricket; communicates best in the mornings.",
+      "createdBy": "0f1e2d3c-2222-4aaa-8bbb-000000000006",
+      "lastUpdatedBy": "0f1e2d3c-2222-4aaa-8bbb-000000000006",
+      "profileImage": null,
+      "memberId": "mem-008",
+      "owners": [
+        "0f1e2d3c-2222-4aaa-8bbb-000000000006"
+      ],
+      "memberGroups": [
+        "team-e5f6g7h8-member"
+      ],
+      "adminGroups": [
+        "team-e5f6g7h8-admin"
+      ]
+    }
+  ],
+  "ProfileDefinition": [
+    {
+      "id": "pd-001",
+      "createdAt": "2026-02-03T09:00:00.000Z",
+      "updatedAt": "2026-02-03T09:00:00.000Z",
+      "profileId": "prof-001",
+      "category": "Medical",
+      "type": "text",
+      "order": "1",
+      "name": "Medication",
+      "description": "Donepezil 10mg, mornings with food. Blister pack in kitchen drawer.",
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000001"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "pd-002",
+      "createdAt": "2026-02-03T09:00:00.000Z",
+      "updatedAt": "2026-02-03T09:00:00.000Z",
+      "profileId": "prof-001",
+      "category": "Medical",
+      "type": "text",
+      "order": "2",
+      "name": "Allergies",
+      "description": "Penicillin. No food allergies.",
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000001"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "pd-003",
+      "createdAt": "2026-02-03T09:00:00.000Z",
+      "updatedAt": "2026-02-03T09:00:00.000Z",
+      "profileId": "prof-001",
+      "category": "Routine",
+      "type": "text",
+      "order": "3",
+      "name": "Morning routine",
+      "description": "Tea (milk, no sugar) before anything else. Prefers to dress herself; allow extra time.",
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000001"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "pd-004",
+      "createdAt": "2026-02-08T09:00:00.000Z",
+      "updatedAt": "2026-02-08T09:00:00.000Z",
+      "profileId": "prof-001",
+      "category": "Contacts",
+      "type": "text",
+      "order": "4",
+      "name": "GP",
+      "description": "Dr Patel, Oakwood Surgery, 0113 496 0000.",
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000001"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "pd-005",
+      "createdAt": "2026-03-16T09:00:00.000Z",
+      "updatedAt": "2026-03-16T09:00:00.000Z",
+      "profileId": "prof-002",
+      "category": "Medical",
+      "type": "text",
+      "order": "1",
+      "name": "Medication",
+      "description": "Clopidogrel 75mg daily; atorvastatin evenings.",
+      "owners": [
+        "0f1e2d3c-2222-4aaa-8bbb-000000000006"
+      ],
+      "memberGroups": [
+        "team-e5f6g7h8-member"
+      ],
+      "adminGroups": [
+        "team-e5f6g7h8-admin"
+      ]
+    },
+    {
+      "id": "pd-006",
+      "createdAt": "2026-03-16T09:00:00.000Z",
+      "updatedAt": "2026-03-16T09:00:00.000Z",
+      "profileId": "prof-002",
+      "category": "Mobility",
+      "type": "text",
+      "order": "2",
+      "name": "Transfers",
+      "description": "Uses quad stick indoors; wheelchair for outings. One-person assist.",
+      "owners": [
+        "0f1e2d3c-2222-4aaa-8bbb-000000000006"
+      ],
+      "memberGroups": [
+        "team-e5f6g7h8-member"
+      ],
+      "adminGroups": [
+        "team-e5f6g7h8-admin"
+      ]
+    }
+  ],
+  "DailySummary": [
+    {
+      "id": "ds-001",
+      "createdAt": "2026-06-01T09:00:00.000Z",
+      "updatedAt": "2026-06-01T09:00:00.000Z",
+      "teamId": "team-001",
+      "postedBy": "0f1e2d3c-1111-4aaa-8bbb-000000000004",
+      "activities": "Morning walk to the post office, then pottering in the greenhouse. Fish and chips for lunch — ate well.",
+      "mood": "Cheerful and chatty",
+      "needToKnow": "Repeat prescription ready for collection at Boots from Wednesday.",
+      "images": [
+        {
+          "key": "summaries/2026-06-01-greenhouse.jpg",
+          "bucket": "incharge-media",
+          "region": "eu-west-2"
+        }
+      ],
+      "viewedBy": [
+        {
+          "userId": "0f1e2d3c-1111-4aaa-8bbb-000000000001",
+          "at": "2026-06-01T18:42:00.000Z"
+        },
+        {
+          "userId": "0f1e2d3c-1111-4aaa-8bbb-000000000003",
+          "at": "2026-06-02T07:15:00.000Z"
+        }
+      ],
+      "deleted": false,
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000004"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "ds-002",
+      "createdAt": "2026-06-02T09:00:00.000Z",
+      "updatedAt": "2026-06-02T09:00:00.000Z",
+      "teamId": "team-001",
+      "postedBy": "0f1e2d3c-1111-4aaa-8bbb-000000000005",
+      "activities": "Quiet day in. Crossword together, short nap after lunch.",
+      "mood": "A little tired, settled by evening",
+      "needToKnow": "Left knee swollen again — worth mentioning to the GP if it persists.",
+      "images": [],
+      "viewedBy": [
+        {
+          "userId": "0f1e2d3c-1111-4aaa-8bbb-000000000001",
+          "at": "2026-06-02T20:05:00.000Z"
+        }
+      ],
+      "deleted": false,
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000005"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "ds-003",
+      "createdAt": "2026-06-03T09:00:00.000Z",
+      "updatedAt": "2026-06-03T09:00:00.000Z",
+      "teamId": "team-001",
+      "postedBy": "0f1e2d3c-1111-4aaa-8bbb-000000000004",
+      "activities": "GP visit re: knee (see edit history — time corrected). Ice pack applied, comfortable since.",
+      "mood": "Stoic, good spirits",
+      "needToKnow": "GP advised rest and review in one week. Follow-up booked for 10 June, 11:30.",
+      "images": [],
+      "viewedBy": [],
+      "deleted": false,
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000004"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "ds-004",
+      "createdAt": "2026-05-28T09:00:00.000Z",
+      "updatedAt": "2026-05-28T09:00:00.000Z",
+      "teamId": "team-001",
+      "postedBy": "0f1e2d3c-1111-4aaa-8bbb-000000000005",
+      "activities": "Duplicate entry posted in error.",
+      "mood": "-",
+      "needToKnow": "-",
+      "images": [],
+      "viewedBy": [],
+      "deleted": true,
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000005"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "ds-005",
+      "createdAt": "2026-06-02T09:00:00.000Z",
+      "updatedAt": "2026-06-02T09:00:00.000Z",
+      "teamId": "team-002",
+      "postedBy": "0f1e2d3c-2222-4aaa-8bbb-000000000008",
+      "activities": "Physio at 10am — managed the full set of exercises. Watched the cricket highlights.",
+      "mood": "Determined, upbeat",
+      "needToKnow": "Physio suggests adding a second weekly session from July.",
+      "images": [],
+      "viewedBy": [
+        {
+          "userId": "0f1e2d3c-2222-4aaa-8bbb-000000000006",
+          "at": "2026-06-02T19:30:00.000Z"
+        }
+      ],
+      "deleted": false,
+      "owners": [
+        "0f1e2d3c-2222-4aaa-8bbb-000000000008"
+      ],
+      "memberGroups": [
+        "team-e5f6g7h8-member"
+      ],
+      "adminGroups": [
+        "team-e5f6g7h8-admin"
+      ]
+    }
+  ],
+  "DailySummaryVersions": [
+    {
+      "id": "dsv-001",
+      "createdAt": "2026-06-03T09:00:00.000Z",
+      "updatedAt": "2026-06-03T09:00:00.000Z",
+      "dailySummaryId": "ds-003",
+      "versionNumber": 1,
+      "postedBy": "0f1e2d3c-1111-4aaa-8bbb-000000000004",
+      "activities": "GP visit at 2pm re: knee. Ice pack applied.",
+      "mood": "Stoic, good spirits",
+      "needToKnow": "GP advised rest.",
+      "images": [],
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000004"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "dsv-002",
+      "createdAt": "2026-06-03T09:00:00.000Z",
+      "updatedAt": "2026-06-03T09:00:00.000Z",
+      "dailySummaryId": "ds-003",
+      "versionNumber": 2,
+      "postedBy": "0f1e2d3c-1111-4aaa-8bbb-000000000004",
+      "activities": "GP visit re: knee (time corrected to 3pm). Ice pack applied, comfortable since.",
+      "mood": "Stoic, good spirits",
+      "needToKnow": "GP advised rest and review in one week.",
+      "images": [],
+      "owners": [
+        "0f1e2d3c-1111-4aaa-8bbb-000000000004"
+      ],
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    }
+  ],
+  "TeamSchedule": [
+    {
+      "id": "tsch-001",
+      "createdAt": "2026-05-29T09:00:00.000Z",
+      "updatedAt": "2026-05-29T09:00:00.000Z",
+      "weekNumber": "2026-W23",
+      "memberId": "mem-004",
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "tsch-002",
+      "createdAt": "2026-05-29T09:00:00.000Z",
+      "updatedAt": "2026-05-29T09:00:00.000Z",
+      "weekNumber": "2026-W23",
+      "memberId": "mem-005",
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "tsch-003",
+      "createdAt": "2026-06-05T09:00:00.000Z",
+      "updatedAt": "2026-06-05T09:00:00.000Z",
+      "weekNumber": "2026-W24",
+      "memberId": "mem-004",
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "tsch-004",
+      "createdAt": "2026-05-30T09:00:00.000Z",
+      "updatedAt": "2026-05-30T09:00:00.000Z",
+      "weekNumber": "2026-W23",
+      "memberId": "mem-009",
+      "memberGroups": [
+        "team-e5f6g7h8-member"
+      ],
+      "adminGroups": [
+        "team-e5f6g7h8-admin"
+      ]
+    }
+  ],
+  "Shift": [
+    {
+      "id": "sh-001",
+      "createdAt": "2026-05-29T09:00:00.000Z",
+      "updatedAt": "2026-05-29T09:00:00.000Z",
+      "teamScheduleId": "tsch-001",
+      "startTime": "2026-06-01T08:00:00.000Z",
+      "finishTime": "2026-06-01T14:00:00.000Z",
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "sh-002",
+      "createdAt": "2026-05-29T09:00:00.000Z",
+      "updatedAt": "2026-05-29T09:00:00.000Z",
+      "teamScheduleId": "tsch-001",
+      "startTime": "2026-06-03T08:00:00.000Z",
+      "finishTime": "2026-06-03T16:00:00.000Z",
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "sh-003",
+      "createdAt": "2026-05-29T09:00:00.000Z",
+      "updatedAt": "2026-05-29T09:00:00.000Z",
+      "teamScheduleId": "tsch-001",
+      "startTime": "2026-06-05T12:00:00.000Z",
+      "finishTime": "2026-06-05T18:00:00.000Z",
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "sh-004",
+      "createdAt": "2026-05-29T09:00:00.000Z",
+      "updatedAt": "2026-05-29T09:00:00.000Z",
+      "teamScheduleId": "tsch-002",
+      "startTime": "2026-06-02T08:00:00.000Z",
+      "finishTime": "2026-06-02T14:00:00.000Z",
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "sh-005",
+      "createdAt": "2026-05-29T09:00:00.000Z",
+      "updatedAt": "2026-05-29T09:00:00.000Z",
+      "teamScheduleId": "tsch-002",
+      "startTime": "2026-06-04T14:00:00.000Z",
+      "finishTime": "2026-06-04T20:00:00.000Z",
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "sh-006",
+      "createdAt": "2026-06-05T09:00:00.000Z",
+      "updatedAt": "2026-06-05T09:00:00.000Z",
+      "teamScheduleId": "tsch-003",
+      "startTime": "2026-06-08T08:00:00.000Z",
+      "finishTime": "2026-06-08T14:00:00.000Z",
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "sh-007",
+      "createdAt": "2026-06-05T09:00:00.000Z",
+      "updatedAt": "2026-06-05T09:00:00.000Z",
+      "teamScheduleId": "tsch-003",
+      "startTime": "2026-06-10T10:30:00.000Z",
+      "finishTime": "2026-06-10T13:00:00.000Z",
+      "memberGroups": [
+        "team-a1b2c3d4-member"
+      ],
+      "adminGroups": [
+        "team-a1b2c3d4-admin"
+      ]
+    },
+    {
+      "id": "sh-008",
+      "createdAt": "2026-05-30T09:00:00.000Z",
+      "updatedAt": "2026-05-30T09:00:00.000Z",
+      "teamScheduleId": "tsch-004",
+      "startTime": "2026-06-02T09:00:00.000Z",
+      "finishTime": "2026-06-02T13:00:00.000Z",
+      "memberGroups": [
+        "team-e5f6g7h8-member"
+      ],
+      "adminGroups": [
+        "team-e5f6g7h8-admin"
+      ]
+    },
+    {
+      "id": "sh-009",
+      "createdAt": "2026-05-30T09:00:00.000Z",
+      "updatedAt": "2026-05-30T09:00:00.000Z",
+      "teamScheduleId": "tsch-004",
+      "startTime": "2026-06-04T09:00:00.000Z",
+      "finishTime": "2026-06-04T13:00:00.000Z",
+      "memberGroups": [
+        "team-e5f6g7h8-member"
+      ],
+      "adminGroups": [
+        "team-e5f6g7h8-admin"
+      ]
+    }
+  ]
+}
