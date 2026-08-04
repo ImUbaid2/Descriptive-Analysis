@@ -1,4 +1,4 @@
-# Offline AI Patient Report Generator
+# AI Patient Report Generator
 
 This tool reads a care-management JSON export, creates a patient-centred view of the records, asks an **offline local Ollama model** for an evidence-based narrative summary, and saves a professional PDF for every patient in `Saved/`.
 
