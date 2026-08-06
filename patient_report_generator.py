@@ -8,7 +8,7 @@ import json
 import logging
 import re
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -38,6 +38,7 @@ class PatientReport:
     summaries: list[dict[str, Any]] = field(default_factory=list)
     profile_details: list[dict[str, Any]] = field(default_factory=list)
     linkage_notes: list[str] = field(default_factory=list)
+    export_overview: list[tuple[str, str]] = field(default_factory=list)
 
 
 def records(data: dict[str, Any], *names: str) -> list[dict[str, Any]]:
@@ -98,6 +99,27 @@ def find_patients(data: dict[str, Any]) -> list[dict[str, Any]]:
     return [x for x in candidates if not (str(x.get("id", id(x))) in seen or seen.add(str(x.get("id", id(x)))))]
 
 
+def export_data_overview(data: dict[str, Any]) -> list[tuple[str, str]]:
+    """Return descriptive counts for the source export and its member roles."""
+    members = records(data, "Member", "members")
+    role_counts = Counter(str(first_value(member, ("role", "memberRole", "member_role"), "Role not recorded")) for member in members)
+    overview = [
+        ("Teams", str(len(records(data, "Team", "teams")))),
+        ("Members", str(len(members))),
+    ]
+    overview.extend((f"Members — {role}", str(count)) for role, count in sorted(role_counts.items(), key=lambda item: item[0].lower()))
+    overview.extend([
+        ("Invites", str(len(records(data, "Invite", "invites")))),
+        ("Profiles", str(len(records(data, "Profile", "profiles")))),
+        ("Profile definitions", str(len(records(data, "ProfileDefinition", "profileDefinitions", "profile_definitions")))),
+        ("Daily summaries", str(len(records(data, "DailySummary", "dailySummaries", "daily_summaries")))),
+        ("Daily summary versions", str(len(records(data, "DailySummaryVersions", "dailySummaryVersions", "daily_summary_versions")))),
+        ("Team schedules", str(len(records(data, "TeamSchedule", "teamSchedules", "team_schedules")))),
+        ("Shifts", str(len(records(data, "Shift", "shifts")))),
+    ])
+    return overview
+
+
 def extract_reports(data: dict[str, Any]) -> list[PatientReport]:
     """Build patient-centred views, preferring direct IDs over team inference."""
     patients = find_patients(data)
@@ -131,6 +153,7 @@ def extract_reports(data: dict[str, Any]) -> list[PatientReport]:
         shifts.append(item)
 
     reports: list[PatientReport] = []
+    overview = export_data_overview(data)
     for patient in patients:
         patient_id = str(patient.get("id", ""))
         team_id = row_team_id(patient)
@@ -153,7 +176,7 @@ def extract_reports(data: dict[str, Any]) -> list[PatientReport]:
             notes.append("Shift records are associated by team because the export contains no direct patient reference.")
         if not direct_summaries and patient_summaries:
             notes.append("Daily summaries are associated by team because the export contains no direct patient reference.")
-        reports.append(PatientReport(patient, care_team, patient_shifts, patient_summaries, details, notes))
+        reports.append(PatientReport(patient, care_team, patient_shifts, patient_summaries, details, notes, overview))
     return reports
 
 
@@ -260,6 +283,10 @@ def report_story(report: PatientReport, analysis: dict[str, str], styles: dict) 
     table = Table(patient_items, colWidths=[4.2*cm, 12.5*cm], repeatRows=1)
     table.setStyle(TableStyle([("BACKGROUND", (0,0), (-1,0), colors.HexColor("#17365D")), ("TEXTCOLOR", (0,0), (-1,0), colors.white), ("GRID", (0,0), (-1,-1), .25, colors.lightgrey), ("VALIGN", (0,0), (-1,-1), "TOP"), ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"), ("FONTSIZE", (0,0), (-1,-1), 8), ("LEFTPADDING", (0,0), (-1,-1), 5), ("RIGHTPADDING", (0,0), (-1,-1), 5)]))
     story += [Spacer(1, 8), Paragraph("Patient Information", styles["Section"]), table]
+    overview_items = [["Source JSON record type", "Count"]] + [[esc(label), esc(count)] for label, count in report.export_overview]
+    overview_table = Table(overview_items, colWidths=[12.0*cm, 4.7*cm], repeatRows=1)
+    overview_table.setStyle(TableStyle([("BACKGROUND", (0,0), (-1,0), colors.HexColor("#17365D")), ("TEXTCOLOR", (0,0), (-1,0), colors.white), ("GRID", (0,0), (-1,-1), .25, colors.lightgrey), ("VALIGN", (0,0), (-1,-1), "TOP"), ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"), ("FONTSIZE", (0,0), (-1,-1), 9), ("ALIGN", (1,1), (1,-1), "RIGHT"), ("LEFTPADDING", (0,0), (-1,-1), 5), ("RIGHTPADDING", (0,0), (-1,-1), 5)]))
+    story += [Spacer(1, 8), Paragraph("Export Data Overview", styles["Section"]), overview_table]
     section(story, "Care Team / Providers", "\n".join(f"{person_name(x)} — {first_value(x, ('role', 'jobTitle', 'type'), 'role not recorded')}" for x in report.care_team) or "No care-team records found.", styles)
     section(story, "Profile and Care Information", "\n".join(compact_row(x, ("category", "name", "description")) for x in report.profile_details) or "No profile details found.", styles)
     section(story, "Shift History", "\n".join(compact_row(x, ("startTime", "finishTime", "workerMemberId", "status")) for x in report.shifts) or "No shift records found.", styles)
