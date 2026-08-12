@@ -22,6 +22,8 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import cm
 from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
+from anonymizer import anonymise_export
+
 LOG = logging.getLogger("patient_report_generator")
 OLLAMA_URL = "http://localhost:11434"
 
@@ -160,7 +162,7 @@ def extract_reports(data: dict[str, Any]) -> list[PatientReport]:
         patient_profiles = [p for p in profiles if str(first_value(p, ("memberId", "patientId", "serviceUserId"), "")) == patient_id]
         profile_ids = {str(p.get("id")) for p in patient_profiles}
         details = [
-            {"category": "Profile", "name": "Biography", "description": profile["bio"]}
+            {"category": "Profile", "name": "Biography", "description": profile["bio"], "sourceCollection": "Profile", "sourceId": profile.get("id")}
             for profile in patient_profiles if profile.get("bio")
         ] + [d for d in definitions if str(first_value(d, ("profileId", "profile_id"), "")) in profile_ids]
 
@@ -266,15 +268,54 @@ def esc(value: Any) -> str:
     return escape(str(value if value not in (None, "") else "Not recorded"))
 
 
-def section(story: list, title: str, text: str, styles: dict) -> None:
+def section(story: list, title: str, text: str, styles: dict, references: str | None = None) -> None:
     story += [Spacer(1, 8), Paragraph(esc(title), styles["Section"]), Paragraph(esc(text), styles["BodyText"])]
+    if references:
+        story.append(Paragraph("<b>JSON source references:</b> " + esc(references), styles["Reference"]))
 
 
 def report_styles() -> dict:
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle("TitleCenter", parent=styles["Title"], alignment=TA_CENTER, textColor=colors.HexColor("#17365D")))
     styles.add(ParagraphStyle("Section", parent=styles["Heading2"], textColor=colors.HexColor("#17365D"), spaceBefore=10))
+    styles.add(ParagraphStyle("Reference", parent=styles["BodyText"], fontSize=8, leading=10, textColor=colors.HexColor("#52687C"), leftIndent=8, spaceBefore=3))
     return styles
+
+
+def json_record_reference(collection: str, record: dict[str, Any], fields: tuple[str, ...]) -> str:
+    """Describe the precise JSON record/fields used without exposing raw text."""
+    identifier = first_value(record, ("id", "sourceId"), "record without ID")
+    date = first_value(record, ("createdAt", "date", "startTime"))
+    field_list = ", ".join(field for field in fields if first_value(record, (field,)) not in (None, "")) or "linked record"
+    date_part = f", date: {str(date)[:10]}" if date else ""
+    return f"{collection} (id: {identifier}{date_part}; fields: {field_list})"
+
+
+def reference_list(references: list[str], maximum: int = 4) -> str:
+    if not references:
+        return "No matching source records were available."
+    visible = references[:maximum]
+    suffix = f"; plus {len(references) - maximum} additional matching record(s)" if len(references) > maximum else ""
+    return "; ".join(visible) + suffix + "."
+
+
+def analysis_json_references(report: PatientReport) -> dict[str, str]:
+    """Build audit-friendly provenance for the AI overview sections."""
+    summary_refs = [json_record_reference("DailySummary", row, ("activities", "mood", "needToKnow")) for row in report.summaries]
+    shift_refs = [json_record_reference("Shift", row, ("startTime", "finishTime", "workerMemberId")) for row in report.shifts]
+    mood_refs = [json_record_reference("DailySummary", row, ("mood",)) for row in report.summaries if row.get("mood") not in (None, "", "-")]
+    health_refs = [json_record_reference(str(row.get("sourceCollection", "ProfileDefinition")), row, ("category", "name", "description")) for row in report.profile_details if str(first_value(row, ("category", "section"), "")).lower() in {"medical", "health", "mobility", "medication", "allergies", "profile"}]
+    follow_up_refs = [json_record_reference("DailySummary", row, ("needToKnow",)) for row in report.summaries if first_value(row, ("needToKnow", "need_to_know", "alerts")) not in (None, "", "-")]
+    linkage_refs = [json_record_reference("Member", report.patient, ("teamId",))]
+    linkage_refs.extend(json_record_reference("Shift", row, ("teamScheduleId", "teamId", "workerMemberId")) for row in report.shifts[:2])
+    linkage_refs.extend(json_record_reference("DailySummary", row, ("teamId",)) for row in report.summaries[:2])
+    return {
+        "conclusion": reference_list(summary_refs[:3] + shift_refs[:1]),
+        "mood_assessment": reference_list(mood_refs),
+        "health_condition_summary": reference_list(health_refs),
+        "notable_follow_ups": reference_list(follow_up_refs),
+        "data_linkage": reference_list(linkage_refs) if report.linkage_notes else "No inferred team linkage was used.",
+    }
 
 
 def report_story(report: PatientReport, analysis: dict[str, str], styles: dict) -> list:
@@ -292,12 +333,13 @@ def report_story(report: PatientReport, analysis: dict[str, str], styles: dict) 
     section(story, "Shift History", "\n".join(compact_row(x, ("startTime", "finishTime", "workerMemberId", "status")) for x in report.shifts) or "No shift records found.", styles)
     section(story, "Daily Summaries", "\n".join(compact_row(x, ("createdAt", "mood", "activities", "needToKnow")) for x in report.summaries) or "No daily summaries found.", styles)
     story += [PageBreak(), Paragraph("AI-Generated Care Overview", styles["TitleCenter"])]
-    section(story, "Conclusion", analysis["conclusion"], styles)
-    section(story, "Mood / Mental State", analysis["mood_assessment"], styles)
-    section(story, "Documented Health Conditions", analysis["health_condition_summary"], styles)
-    section(story, "Notable Follow-ups", analysis["notable_follow_ups"], styles)
+    references = analysis_json_references(report)
+    section(story, "Conclusion", analysis["conclusion"], styles, references["conclusion"])
+    section(story, "Mood / Mental State", analysis["mood_assessment"], styles, references["mood_assessment"])
+    section(story, "Documented Health Conditions", analysis["health_condition_summary"], styles, references["health_condition_summary"])
+    section(story, "Notable Follow-ups", analysis["notable_follow_ups"], styles, references["notable_follow_ups"])
     if report.linkage_notes:
-        section(story, "Data Linkage Notes", " ".join(report.linkage_notes), styles)
+        section(story, "Data Linkage Notes", " ".join(report.linkage_notes), styles, references["data_linkage"])
     section(story, "Important", "This report is an administrative summary of supplied care records. It is not a diagnosis, clinical assessment, or substitute for professional medical judgement.", styles)
     return story
 
@@ -347,6 +389,7 @@ def main() -> int:
     try:
         data = json.loads(args.input_json.read_text(encoding="utf-8-sig"))
         if not isinstance(data, dict): raise ValueError("Top-level JSON must be an object.")
+        data = anonymise_export(data)
         requests.get(f"{args.ollama_url.rstrip('/')}/api/tags", timeout=5).raise_for_status()
         reports = extract_reports(data)
     except (OSError, json.JSONDecodeError, ValueError, requests.RequestException) as error:

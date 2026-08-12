@@ -4,6 +4,8 @@ This tool reads a care-management JSON export, creates a patient-centred view of
 
 It does not use cloud APIs or require API keys. The generated AI text is an administrative summary, not medical advice or a diagnosis.
 
+Before report extraction, the tool anonymises names, email addresses, phone numbers, team names, and recognised locations. See [ANONYMISATION_CHANGES.md](ANONYMISATION_CHANGES.md) for the privacy workflow and its limits.
+
 ## What it extracts
 
 - Patient identity and supplied demographic/profile fields
@@ -68,7 +70,7 @@ pip install -r requirements.txt
 python web_app.py
 ```
 
-Open **http://127.0.0.1:5000** in a browser. Choose the JSON file, enter the installed Ollama model name, and select **Generate reports**. The browser displays every patient's extracted care data and AI summary, embeds each generated PDF, and saves the PDF copies in `Saved/`. The web server binds only to your own computer, so uploaded care data is not exposed to the local network.
+Open **http://127.0.0.1:5000** in a browser. Upload the JSON and select **Prepare anonymised persons**. The page displays tabs for anonymised central persons (for example, `Central Person 1`). Select one tab to generate only that person's report. The browser displays the anonymised data and AI summary, embeds the PDF, and saves its copy in `Saved/`. The web server binds only to your own computer, so uploaded care data is not exposed to the local network.
 
 ## How it works
 
